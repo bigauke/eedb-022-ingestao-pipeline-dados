@@ -1,5 +1,15 @@
 # Relatório Final de Evidências: Atividade 1 – Ingestão e ETL (Apache Hop + PostgreSQL)
 
+**Disciplina**: Ingestão e Pipeline de Dados (eEDB-022) - PECE / POLI-USP  
+**Professor**: Prof. MSc. Leandro Mendes Ferreira  
+
+### 👥 Integrantes do Grupo / Colaboradores:
+- **Antonio Daniel de Souza Linhares**
+- **Yuri Alexandre Barbosa Rodrigues**
+- **Hercules Ramos Veloso de Freitas**
+
+---
+
 ## 📌 Visão Geral da Solução
 A solução de Engenharia de Dados foi desenvolvida para atender aos requisitos da **Atividade 1** utilizando uma arquitetura assíncrona, conteinerizada e declarativa:
 - **Ferramenta Visual de ETL**: Apache Hop Web GUI (Orquestrador `wf_main_etl.hwk` e Pipelines `.hpl`).

@@ -144,5 +144,13 @@ ORDER BY total_reclamacoes DESC;
 
 ---
 
+## 👥 Equipe e Colaboradores
+- **Antonio Daniel de Souza Linhares**
+- **Yuri Alexandre Barbosa Rodrigues**
+- **Hercules Ramos Veloso de Freitas**
+
+---
+
 ## 📜 Licença e Créditos
 Desenvolvido como projeto prático da pós-graduação **eEDB-022: Ingestão e Pipeline de Dados** - **PECE / POLI-USP**.
+
