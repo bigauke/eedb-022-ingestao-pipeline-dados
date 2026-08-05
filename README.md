@@ -144,7 +144,7 @@ ORDER BY total_reclamacoes DESC;
 
 ---
 
-## 👥 Equipe e Colaboradores
+## 👥 Equipe
 - **Antonio Daniel de Souza Linhares**
 - **Yuri Alexandre Barbosa Rodrigues**
 - **Hercules Ramos Veloso de Freitas**

@@ -3,7 +3,7 @@
 **Disciplina**: Ingestão e Pipeline de Dados (eEDB-022) - PECE / POLI-USP  
 **Professor**: Prof. MSc. Leandro Mendes Ferreira  
 
-### 👥 Integrantes do Grupo / Colaboradores:
+### 👥 Equipe
 - **Antonio Daniel de Souza Linhares**
 - **Yuri Alexandre Barbosa Rodrigues**
 - **Hercules Ramos Veloso de Freitas**
