@@ -101,11 +101,17 @@ flowchart LR
 - **Python 3.8+**
 - **Terraform 1.0+** (opcional, orquestrado automaticamente pelo script)
 
-### 🚀 Execução em 1 Comando (PowerShell)
-Execute o script orquestrador na raiz do projeto:
+### 🚀 Execução em 1 Comando
 
+**No Windows (PowerShell):**
 ```powershell
 .\scripts\run_all.ps1
+```
+
+**No Linux / macOS (Bash):**
+```bash
+chmod +x ./run_all.sh
+./run_all.sh
 ```
 
 ### 🔄 O que o script orquestrador realiza automaticamente:
