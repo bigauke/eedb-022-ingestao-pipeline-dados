@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline>
+  <info>
+    <name>pipe_build_star_schema</name>
+    <description>Pipeline Hop para Carga da Modelagem Star Schema (Dimensões e Fato)</description>
+    <extended_description/>
+    <pipeline_version>1.0</pipeline_version>
+    <pipeline_type>Normal</pipeline_type>
+    <parameters>
+    </parameters>
+  </info>
+  <order>
+    <hop>
+      <from>Execute SQL - Popula Dimensões e Fato</from>
+      <to>Dummy (do nothing)</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>Execute SQL - Popula Dimensões e Fato</name>
+    <type>ExecSQL</type>
+    <description>Carga SQL das tabelas Dimensionais e da Tabela Fato no PostgreSQL</description>
+    <connection>postgres_dw_conn</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quote_string>N</quote_string>
+    <sql>
+-- 1. Carga dim_instituicao
+INSERT INTO dw.dim_instituicao (cnpj_if, nome_instituicao, segmento, categoria, tipo_instituicao)
+SELECT 
+    MAX(r.cnpj_if) AS cnpj_if,
+    TRIM(r.instituicao_financeira) AS nome_instituicao,
+    COALESCE(MAX(e.segmento), MAX(r.categoria), 'Outros') AS segmento,
+    MAX(r.categoria) AS categoria,
+    MAX(r.tipo) AS tipo_instituicao
+FROM staging.stg_reclamacoes r
+LEFT JOIN staging.stg_enquadramento e ON TRIM(e.nome) = TRIM(r.instituicao_financeira) OR (e.cnpj IS NOT NULL AND e.cnpj = r.cnpj_if)
+WHERE r.instituicao_financeira IS NOT NULL
+GROUP BY TRIM(r.instituicao_financeira)
+ON CONFLICT (nome_instituicao, segmento) DO UPDATE SET 
+    cnpj_if = EXCLUDED.cnpj_if,
+    categoria = EXCLUDED.categoria,
+    tipo_instituicao = EXCLUDED.tipo_instituicao;
+
+-- 2. Carga dim_tempo
+INSERT INTO dw.dim_tempo (ano, trimestre, rotulo_trimestre)
+SELECT DISTINCT 
+    r.ano,
+    r.trimestre,
+    CONCAT(r.ano, '-Q', REPLACE(r.trimestre, 'º', '')) AS rotulo_trimestre
+FROM staging.stg_reclamacoes r
+WHERE r.ano IS NOT NULL
+ON CONFLICT (ano, trimestre) DO NOTHING;
+
+-- 3. Carga dim_clima_organizacional
+INSERT INTO dw.dim_clima_organizacional (
+    employer_name, score_geral, score_cultura, score_diversidade,
+    score_qualidade_vida, score_lideranca, score_remuneracao, score_carreira,
+    pct_recomendam, pct_perspectiva_positiva, employer_headquarters,
+    employer_founded, employer_revenue
+)
+SELECT DISTINCT 
+    g.employer_name,
+    g.score_geral,
+    g.score_cultura,
+    g.score_diversidade,
+    g.score_qualidade_vida,
+    g.score_lideranca,
+    g.score_remuneracao,
+    g.score_carreira,
+    g.pct_recomendam,
+    g.pct_perspectiva_positiva,
+    g.employer_headquarters,
+    g.employer_founded,
+    g.employer_revenue
+FROM staging.stg_glassdoor g
+WHERE g.employer_name IS NOT NULL
+ON CONFLICT (employer_name) DO UPDATE SET
+    score_geral = EXCLUDED.score_geral,
+    score_cultura = EXCLUDED.score_cultura,
+    score_remuneracao = EXCLUDED.score_remuneracao,
+    pct_recomendam = EXCLUDED.pct_recomendam;
+
+-- 4. Carga fato_reclamacoes
+TRUNCATE TABLE dw.fato_reclamacoes;
+
+INSERT INTO dw.fato_reclamacoes (
+    sk_instituicao, sk_tempo, sk_clima, indice_reclamacao,
+    qtd_reclamacoes_procedentes, qtd_reclamacoes_outras, qtd_reclamacoes_nao_reguladas,
+    qtd_total_reclamacoes, qtd_total_clientes_ccs_scr, qtd_clientes_ccs, qtd_clientes_scr
+)
+SELECT 
+    di.sk_instituicao,
+    dt.sk_tempo,
+    dc.sk_clima,
+    r.indice_reclamacao,
+    COALESCE(r.qtd_reclamacoes_procedentes, 0),
+    COALESCE(r.qtd_reclamacoes_outras, 0),
+    COALESCE(r.qtd_reclamacoes_nao_reguladas, 0),
+    COALESCE(r.qtd_total_reclamacoes, 0),
+    COALESCE(r.qtd_total_clientes_ccs_scr, 0),
+    COALESCE(r.qtd_clientes_ccs, 0),
+    COALESCE(r.qtd_clientes_scr, 0)
+FROM staging.stg_reclamacoes r
+INNER JOIN dw.dim_tempo dt ON dt.ano = r.ano AND dt.trimestre = r.trimestre
+LEFT JOIN dw.dim_instituicao di ON di.nome_instituicao = TRIM(r.instituicao_financeira)
+LEFT JOIN dw.dim_clima_organizacional dc ON LOWER(dc.employer_name) LIKE CONCAT('%', LOWER(SPLIT_PART(r.instituicao_financeira, ' ', 1)), '%');
+    </sql>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments/>
+    <attributes/>
+    <GUI>
+      <xloc>150</xloc>
+      <yloc>150</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Dummy (do nothing)</name>
+    <type>Dummy</type>
+    <description/>
+    <attributes/>
+    <GUI>
+      <xloc>450</xloc>
+      <yloc>150</yloc>
+    </GUI>
+  </transform>
+  <transform_error_handling>
+  </transform_error_handling>
+  <attributes/>
+</pipeline>

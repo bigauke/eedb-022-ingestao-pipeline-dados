@@ -1,0 +1,270 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pipeline>
+  <info>
+    <name>pipe_stg_glassdoor</name>
+    <description>Pipeline visual Hop para Carga do Glassdoor em Staging</description>
+    <extended_description />
+    <pipeline_version>1.0</pipeline_version>
+    <pipeline_type>Normal</pipeline_type>
+  </info>
+  <order>
+    <hop>
+      <from>CSV input - Glassdoor CSV</from>
+      <to>Select values - Mapeamento Glassdoor</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values - Mapeamento Glassdoor</from>
+      <to>Table output - stg_glassdoor</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>CSV input - Glassdoor CSV</name>
+    <type>CSVInput</type>
+    <description>Leitura do arquivo CSV do Glassdoor (delimitador pipe |)</description>
+    <filename>${PROJECT_HOME}/Dados/Empregados/glassdoor_consolidado_join_match_v2.csv</filename>
+    <filename_field />
+    <rownum_field />
+    <include_filename>N</include_filename>
+    <separator>|</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>N</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <encoding>UTF-8</encoding>
+    <fields>
+      <field>
+        <name>employer_name</name>
+        <type>String</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>reviews_count</name>
+        <type>Integer</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>culture_count</name>
+        <type>Integer</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>salaries_count</name>
+        <type>Integer</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>benefits_count</name>
+        <type>Integer</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>employer-website</name>
+        <type>String</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>employer-headquarters</name>
+        <type>String</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>employer-founded</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>employer-industry</name>
+        <type>String</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>employer-revenue</name>
+        <type>String</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>url</name>
+        <type>String</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Geral</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Cultura e valores</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Diversidade e inclusão</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Qualidade de vida</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Alta liderança</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Remuneração e benefícios</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Oportunidades de carreira</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Recomendam para outras pessoas(%)</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Perspectiva positiva da empresa(%)</name>
+        <type>Number</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Segmento</name>
+        <type>String</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Nome</name>
+        <type>String</type>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>match_percent</name>
+        <type>Integer</type>
+        <trim_type>both</trim_type>
+      </field>
+    </fields>
+  <GUI><xloc>150</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+  <transform>
+    <name>Select values - Mapeamento Glassdoor</name>
+    <type>SelectValues</type>
+    <description>Mapeamento de colunas para o banco de dados</description>
+    <fields>
+      <field>
+        <name>employer_name</name>
+        <rename>employer_name</rename>
+      </field>
+      <field>
+        <name>reviews_count</name>
+        <rename>reviews_count</rename>
+      </field>
+      <field>
+        <name>culture_count</name>
+        <rename>culture_count</rename>
+      </field>
+      <field>
+        <name>salaries_count</name>
+        <rename>salaries_count</rename>
+      </field>
+      <field>
+        <name>benefits_count</name>
+        <rename>benefits_count</rename>
+      </field>
+      <field>
+        <name>employer-website</name>
+        <rename>employer_website</rename>
+      </field>
+      <field>
+        <name>employer-headquarters</name>
+        <rename>employer_headquarters</rename>
+      </field>
+      <field>
+        <name>employer-founded</name>
+        <rename>employer_founded</rename>
+      </field>
+      <field>
+        <name>employer-industry</name>
+        <rename>employer_industry</rename>
+      </field>
+      <field>
+        <name>employer-revenue</name>
+        <rename>employer_revenue</rename>
+      </field>
+      <field>
+        <name>url</name>
+        <rename>url</rename>
+      </field>
+      <field>
+        <name>Geral</name>
+        <rename>score_geral</rename>
+      </field>
+      <field>
+        <name>Cultura e valores</name>
+        <rename>score_cultura</rename>
+      </field>
+      <field>
+        <name>Diversidade e inclusão</name>
+        <rename>score_diversidade</rename>
+      </field>
+      <field>
+        <name>Qualidade de vida</name>
+        <rename>score_qualidade_vida</rename>
+      </field>
+      <field>
+        <name>Alta liderança</name>
+        <rename>score_lideranca</rename>
+      </field>
+      <field>
+        <name>Remuneração e benefícios</name>
+        <rename>score_remuneracao</rename>
+      </field>
+      <field>
+        <name>Oportunidades de carreira</name>
+        <rename>score_carreira</rename>
+      </field>
+      <field>
+        <name>Recomendam para outras pessoas(%)</name>
+        <rename>pct_recomendam</rename>
+      </field>
+      <field>
+        <name>Perspectiva positiva da empresa(%)</name>
+        <rename>pct_perspectiva_positiva</rename>
+      </field>
+      <field>
+        <name>Segmento</name>
+        <rename>segmento</rename>
+      </field>
+      <field>
+        <name>Nome</name>
+        <rename>nome</rename>
+      </field>
+      <field>
+        <name>match_percent</name>
+        <rename>match_percent</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+  <GUI><xloc>450</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+  <transform>
+    <name>Table output - stg_glassdoor</name>
+    <type>TableOutput</type>
+    <description>Inserção dos dados no PostgreSQL</description>
+    <connection>postgres_dw_conn</connection>
+    <schema>staging</schema>
+    <table>stg_glassdoor</table>
+    <commit>1000</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>N</specify_fields>
+  <GUI><xloc>750</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+</pipeline>

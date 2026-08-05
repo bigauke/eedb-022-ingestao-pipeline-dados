@@ -1,0 +1,17 @@
+# Ignore PDFs as requested by user
+*.pdf
+docs/*.pdf
+*.PDF
+
+# Ignore temporary fix scripts as requested by user
+scripts/fix_*
+scripts/remove_*
+scripts/create_golden_*
+scripts/generate_dashboard_*
+
+# OS & Environment files
+.DS_Store
+Thumbs.db
+*.tmp
+.idea/
+.vscode/

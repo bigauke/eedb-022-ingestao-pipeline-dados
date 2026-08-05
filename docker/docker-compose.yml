@@ -1,0 +1,37 @@
+services:
+  postgres_dw:
+    image: postgres:16-alpine
+    container_name: postgres_dw
+    restart: always
+    environment:
+      POSTGRES_DB: eedb_dw
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d eedb_dw"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  hop_web:
+    image: apache/hop-web:latest
+    container_name: hop_web_gui
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - HOP_PROJECT_DIRECTORY=/files/hop
+      - HOP_PROJECT_NAME=eedb_project
+    volumes:
+      - ../:/files
+    depends_on:
+      postgres_dw:
+        condition: service_healthy
+
+volumes:
+  pgdata:

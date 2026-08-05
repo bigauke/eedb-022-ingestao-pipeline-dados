@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard DW - Ingestão e Pipeline de Dados BACEN & Glassdoor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --border-color: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-primary); color: var(--text-primary); padding: 24px; min-height: 100vh; }
+        header { margin-bottom: 32px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-size: 24px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 12px; }
+        .badge { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+        .subtitle { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+        
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 32px; }
+        .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .kpi-label { color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .kpi-value { font-size: 28px; font-weight: 800; color: #ffffff; }
+        .kpi-subtext { font-size: 12px; color: var(--accent-green); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+
+        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 24px; }
+        .chart-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; }
+        .chart-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #ffffff; display: flex; align-items: center; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>📊 Data Warehouse Dashboard <span class="badge">Atividade 1 • Concluído</span></h1>
+            <p class="subtitle">Consolidação e Análise de Reclamações BACEN & Clima Organizacional Glassdoor</p>
+        </div>
+    </header>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">Total de Reclamações DW</div>
+            <div class="kpi-value">5.474</div>
+            <div class="kpi-subtext">✔ 100% Carga Consolidada</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Instituições Mapeadas</div>
+            <div class="kpi-value">218</div>
+            <div class="kpi-subtext">✔ Tabela Dimensão</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Trimestres BACEN</div>
+            <div class="kpi-value">8</div>
+            <div class="kpi-subtext">✔ 2021-Q1 a 2022-Q4</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Avaliações Glassdoor</div>
+            <div class="kpi-value">34</div>
+            <div class="kpi-subtext">✔ Empresas Integradas</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-title">
+                <span>Top 10 Bancos com Mais Reclamações (BACEN)</span>
+            </div>
+            <canvas id="topChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">
+                <span>Evolução de Reclamações por Trimestre (2021-2022)</span>
+            </div>
+            <canvas id="timeChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const topData = [{"instituicao": "CAIXA ECON\u00d4MICA FEDERAL (conglomerado)", "total_reclamacoes": 222318, "procedentes": 66069, "outras": 82830}, {"instituicao": "BRADESCO (conglomerado)", "total_reclamacoes": 182505, "procedentes": 54843, "outras": 79803}, {"instituicao": "SANTANDER (conglomerado)", "total_reclamacoes": 136269, "procedentes": 32145, "outras": 69174}, {"instituicao": "ITAU (conglomerado)", "total_reclamacoes": 129840, "procedentes": 28854, "outras": 64359}, {"instituicao": "C6 BANK (conglomerado)", "total_reclamacoes": 114816, "procedentes": 63204, "outras": 36704}, {"instituicao": "BB (conglomerado)", "total_reclamacoes": 101211, "procedentes": 22692, "outras": 45018}, {"instituicao": "BANCO CSF S.A.", "total_reclamacoes": 57783, "procedentes": 26136, "outras": 20064}, {"instituicao": "BMG (conglomerado)", "total_reclamacoes": 48644, "procedentes": 20652, "outras": 22572}, {"instituicao": "INTER (conglomerado)", "total_reclamacoes": 39471, "procedentes": 18141, "outras": 14880}, {"instituicao": "BTG PACTUAL/BANCO PAN (conglomerado)", "total_reclamacoes": 36932, "procedentes": 15790, "outras": 13744}];
+        const triData = [{"trimestre": "2021-Q1", "total_reclamacoes": 238555, "procedentes": 92072}, {"trimestre": "2021-Q2", "total_reclamacoes": 239393, "procedentes": 82331}, {"trimestre": "2021-Q3", "total_reclamacoes": 227898, "procedentes": 67911}, {"trimestre": "2021-Q4", "total_reclamacoes": 205926, "procedentes": 66456}, {"trimestre": "2022-Q1", "total_reclamacoes": 181337, "procedentes": 59659}, {"trimestre": "2022-Q3", "total_reclamacoes": 217256, "procedentes": 68591}, {"trimestre": "2022-Q4", "total_reclamacoes": 181297, "procedentes": 56807}];
+
+        // Top 10 Chart
+        new Chart(document.getElementById('topChart'), {
+            type: 'bar',
+            data: {
+                labels: topData.map(d => d.instituicao),
+                datasets: [
+                    {
+                        label: 'Reclamações Procedentes',
+                        data: topData.map(d => d.procedentes),
+                        backgroundColor: '#3b82f6'
+                    },
+                    {
+                        label: 'Outras Reclamações',
+                        data: topData.map(d => d.outras),
+                        backgroundColor: '#8b5cf6'
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                scales: {
+                    x: { stacked: true, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                    y: { stacked: true, grid: { color: '#334155' }, ticks: { color: '#f8fafc', font: { size: 11 } } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#f8fafc' } }
+                }
+            }
+        });
+
+        // Timeline Chart
+        new Chart(document.getElementById('timeChart'), {
+            type: 'line',
+            data: {
+                labels: triData.map(d => d.trimestre),
+                datasets: [{
+                    label: 'Total de Reclamações',
+                    data: triData.map(d => d.total_reclamacoes),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { grid: { color: '#334155' }, ticks: { color: '#f8fafc' } },
+                    y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#f8fafc' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

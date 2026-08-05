@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pipeline>
+  <info>
+    <name>pipe_stg_enquadramento</name>
+    <description>Pipeline visual Hop para Carga do Enquadramento em Staging</description>
+    <extended_description />
+    <pipeline_version>1.0</pipeline_version>
+    <pipeline_type>Normal</pipeline_type>
+  </info>
+  <order>
+    <hop>
+      <from>Text input - Enquadramento TSV</from>
+      <to>Select values - Standardize</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values - Standardize</from>
+      <to>Table output - stg_enquadramento</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>Text input - Enquadramento TSV</name>
+    <type>CSVInput</type>
+    <description>Leitura do arquivo TSV de Enquadramento do BACEN</description>
+    <filename>${PROJECT_HOME}/Dados/Bancos/EnquadramentoInicia_v2.tsv</filename>
+    <filename_field />
+    <rownum_field />
+    <include_filename>N</include_filename>
+    <separator>	</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>N</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <encoding>UTF-8</encoding>
+    <fields>
+      <field>
+        <name>Segmento</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>CNPJ</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>Nome</name>
+        <type>String</type>
+        <format />
+        <currency />
+        <decimal />
+        <group />
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>both</trim_type>
+      </field>
+    </fields>
+  <GUI><xloc>150</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+  <transform>
+    <name>Select values - Standardize</name>
+    <type>SelectValues</type>
+    <description>Renomear e mapear campos para staging</description>
+    <fields>
+      <field>
+        <name>Segmento</name>
+        <rename>segmento</rename>
+      </field>
+      <field>
+        <name>CNPJ</name>
+        <rename>cnpj</rename>
+      </field>
+      <field>
+        <name>Nome</name>
+        <rename>nome</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+  <GUI><xloc>450</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+  <transform>
+    <name>Table output - stg_enquadramento</name>
+    <type>TableOutput</type>
+    <description>Carga na tabela staging.stg_enquadramento no PostgreSQL</description>
+    <connection>postgres_dw_conn</connection>
+    <schema>staging</schema>
+    <table>stg_enquadramento</table>
+    <commit>1000</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <fields>
+      <field>
+        <column_name>segmento</column_name>
+        <stream_name>segmento</stream_name>
+      </field>
+      <field>
+        <column_name>cnpj</column_name>
+        <stream_name>cnpj</stream_name>
+      </field>
+      <field>
+        <column_name>nome</column_name>
+        <stream_name>nome</stream_name>
+      </field>
+    </fields>
+  <GUI><xloc>750</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+</pipeline>

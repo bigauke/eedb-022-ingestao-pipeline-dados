@@ -1,0 +1,27 @@
+{
+  "name": "eedb_project",
+  "description": "Apache Hop Project for eEDB-022 Data Ingestion and Pipeline Activity 1",
+  "company": "USP PECE",
+  "metadata": {
+    "rdbms": [
+      {
+        "name": "postgres_dw_conn",
+        "hostname": "postgres_dw",
+        "port": "5432",
+        "databaseName": "eedb_dw",
+        "username": "postgres",
+        "password": "Encrypted 2be98afc86aa7f2e4cb79ce10bef2cf8b",
+        "pluginId": "POSTGRESQL",
+        "pluginName": "PostgreSQL",
+        "driverType": "POSTGRESQL"
+      }
+    ]
+  },
+  "variables": [
+    {
+      "name": "DATA_DIR",
+      "value": "/files/Dados",
+      "description": "Caminho base dos arquivos de entrada"
+    }
+  ]
+}

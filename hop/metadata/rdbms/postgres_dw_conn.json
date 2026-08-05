@@ -1,0 +1,23 @@
+{
+  "name": "postgres_dw_conn",
+  "rdbms": {
+    "POSTGRESQL": {
+      "databaseName": "eedb_dw",
+      "pluginId": "POSTGRESQL",
+      "accessType": 0,
+      "hostname": "postgres_dw",
+      "password": "postgres",
+      "pluginName": "PostgreSQL",
+      "port": "5432",
+      "username": "postgres",
+      "attributes": {
+        "FORCE_IDENTIFIERS_TO_LOWERCASE": "N",
+        "FORCE_IDENTIFIERS_TO_UPPERCASE": "N",
+        "PRESERVE_RESERVED_WORD_CASE": "Y",
+        "QUOTE_ALL_FIELDS": "N",
+        "SUPPORTS_BOOLEAN_DATA_TYPE": "Y",
+        "SUPPORTS_TIMESTAMP_DATA_TYPE": "Y"
+      }
+    }
+  }
+}

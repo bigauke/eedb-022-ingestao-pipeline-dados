@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pipeline>
+  <info>
+    <name>pipe_build_final_consolidated</name>
+    <description>Pipeline Hop para Carga da Tabela Final Consolidada</description>
+    <extended_description />
+    <pipeline_version>1.0</pipeline_version>
+    <pipeline_type>Normal</pipeline_type>
+  </info>
+  <order>
+    <hop>
+      <from>Execute SQL - Popula Tabela Final</from>
+      <to>Dummy End</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>Execute SQL - Popula Tabela Final</name>
+    <type>ExecSQL</type>
+    <description>Popula a tabela dw.tb_final_consolidada_reclamacoes com os dados tratados e unidos</description>
+    <connection>postgres_dw_conn</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quote_string>N</quote_string>
+    <sql>
+TRUNCATE TABLE dw.tb_final_consolidada_reclamacoes;
+
+INSERT INTO dw.tb_final_consolidada_reclamacoes (
+    ano, trimestre, rotulo_trimestre, cnpj_if, nome_instituicao, segmento,
+    categoria, tipo_instituicao, indice_reclamacao, qtd_reclamacoes_procedentes,
+    qtd_reclamacoes_outras, qtd_reclamacoes_nao_reguladas, qtd_total_reclamacoes,
+    qtd_total_clientes_ccs_scr, qtd_clientes_ccs, qtd_clientes_scr, employer_name,
+    score_geral_glassdoor, score_cultura_glassdoor, score_remuneracao_glassdoor,
+    score_qualidade_vida_glassdoor, score_lideranca_glassdoor, score_carreira_glassdoor,
+    pct_recomendam_glassdoor, pct_perspectiva_positiva_glassdoor
+)
+SELECT 
+    t.ano,
+    t.trimestre,
+    t.rotulo_trimestre,
+    i.cnpj_if,
+    i.nome_instituicao,
+    i.segmento,
+    i.categoria,
+    i.tipo_instituicao,
+    f.indice_reclamacao,
+    f.qtd_reclamacoes_procedentes,
+    f.qtd_reclamacoes_outras,
+    f.qtd_reclamacoes_nao_reguladas,
+    f.qtd_total_reclamacoes,
+    f.qtd_total_clientes_ccs_scr,
+    f.qtd_clientes_ccs,
+    f.qtd_clientes_scr,
+    c.employer_name,
+    c.score_geral AS score_geral_glassdoor,
+    c.score_cultura AS score_cultura_glassdoor,
+    c.score_remuneracao AS score_remuneracao_glassdoor,
+    c.score_qualidade_vida AS score_qualidade_vida_glassdoor,
+    c.score_lideranca AS score_lideranca_glassdoor,
+    c.score_carreira AS score_carreira_glassdoor,
+    c.pct_recomendam AS pct_recomendam_glassdoor,
+    c.pct_perspectiva_positiva AS pct_perspectiva_positiva_glassdoor
+FROM dw.fato_reclamacoes f
+INNER JOIN dw.dim_instituicao i ON f.sk_instituicao = i.sk_instituicao
+INNER JOIN dw.dim_tempo t ON f.sk_tempo = t.sk_tempo
+LEFT JOIN dw.dim_clima_organizacional c ON f.sk_clima = c.sk_clima;
+    </sql>
+    <insert_field />
+    <update_field />
+    <delete_field />
+    <read_field />
+    <arguments>
+    </arguments>
+  <GUI><xloc>150</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+  <transform>
+    <name>Dummy End</name>
+    <type>Dummy</type>
+    <description />
+  <GUI><xloc>450</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+</pipeline>

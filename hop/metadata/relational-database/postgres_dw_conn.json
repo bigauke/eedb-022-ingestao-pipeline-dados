@@ -1,0 +1,13 @@
+{
+  "name": "postgres_dw_conn",
+  "rdbmsId": "POSTGRESQL",
+  "pluginId": "POSTGRESQL",
+  "driverType": "POSTGRESQL",
+  "hostname": "postgres_dw",
+  "port": "5432",
+  "databaseName": "eedb_dw",
+  "username": "postgres",
+  "password": "Encrypted 2be98afc86aa7f2e4cb79ce10bef2cf8b",
+  "manualUrl": "",
+  "attributes": {}
+}
