@@ -31,7 +31,7 @@
       <attributes_hac/>
     </action>
     <action>
-      <filename>${PROJECT_HOME}/hop/pipelines/pipe_stg_enquadramento.hpl</filename>
+      <filename>${Internal.Entry.Current.Directory}/../pipelines/pipe_stg_enquadramento.hpl</filename>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -58,7 +58,7 @@
       <attributes_hac/>
     </action>
     <action>
-      <filename>${PROJECT_HOME}/hop/pipelines/pipe_stg_glassdoor.hpl</filename>
+      <filename>${Internal.Entry.Current.Directory}/../pipelines/pipe_stg_glassdoor.hpl</filename>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -85,7 +85,7 @@
       <attributes_hac/>
     </action>
     <action>
-      <filename>${PROJECT_HOME}/hop/pipelines/pipe_stg_reclamacoes.hpl</filename>
+      <filename>${Internal.Entry.Current.Directory}/../pipelines/pipe_stg_reclamacoes.hpl</filename>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -112,7 +112,7 @@
       <attributes_hac/>
     </action>
     <action>
-      <filename>${PROJECT_HOME}/hop/pipelines/pipe_build_star_schema.hpl</filename>
+      <filename>${Internal.Entry.Current.Directory}/../pipelines/pipe_build_star_schema.hpl</filename>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -139,7 +139,7 @@
       <attributes_hac/>
     </action>
     <action>
-      <filename>${PROJECT_HOME}/hop/pipelines/pipe_build_final_consolidated.hpl</filename>
+      <filename>${Internal.Entry.Current.Directory}/../pipelines/pipe_build_final_consolidated.hpl</filename>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
