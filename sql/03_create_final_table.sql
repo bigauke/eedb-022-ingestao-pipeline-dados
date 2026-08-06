@@ -34,15 +34,16 @@ CREATE TABLE dw.tb_final_consolidada_reclamacoes (
     dt_processamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- View Analítica de Suporte
+-- View Analítica de Suporte com tratamento COALESCE para nulos
 CREATE VIEW dw.vw_resumo_reclamacoes_por_segmento AS
 SELECT 
-    f.segmento,
+    COALESCE(f.segmento, 'Outros') AS segmento,
     COUNT(DISTINCT f.nome_instituicao) AS total_instituicoes,
-    SUM(f.qtd_total_reclamacoes) AS total_reclamacoes,
-    SUM(f.qtd_reclamacoes_procedentes) AS total_procedentes,
-    AVG(f.score_geral_glassdoor) AS media_score_glassdoor,
-    AVG(f.pct_recomendam_glassdoor) AS media_pct_recomendacao
+    SUM(COALESCE(f.qtd_total_reclamacoes, 0)) AS total_reclamacoes,
+    SUM(COALESCE(f.qtd_reclamacoes_procedentes, 0)) AS total_procedentes,
+    ROUND(AVG(f.score_geral_glassdoor)::numeric, 2) AS media_score_glassdoor,
+    ROUND(AVG(f.pct_recomendam_glassdoor)::numeric, 2) AS media_pct_recomendacao
 FROM dw.tb_final_consolidada_reclamacoes f
 GROUP BY f.segmento
 ORDER BY total_reclamacoes DESC;
+
