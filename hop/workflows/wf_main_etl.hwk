@@ -32,6 +32,7 @@
     </action>
     <action>
       <filename>/files/hop/pipelines/pipe_stg_enquadramento.hpl</filename>
+      <run_configuration>local</run_configuration>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -44,7 +45,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
-      <wait_until_finished>N</wait_until_finished>
+      <wait_until_finished>Y</wait_until_finished>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
@@ -59,6 +60,7 @@
     </action>
     <action>
       <filename>/files/hop/pipelines/pipe_stg_glassdoor.hpl</filename>
+      <run_configuration>local</run_configuration>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -71,7 +73,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
-      <wait_until_finished>N</wait_until_finished>
+      <wait_until_finished>Y</wait_until_finished>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
@@ -86,6 +88,7 @@
     </action>
     <action>
       <filename>/files/hop/pipelines/pipe_stg_reclamacoes.hpl</filename>
+      <run_configuration>local</run_configuration>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -98,7 +101,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
-      <wait_until_finished>N</wait_until_finished>
+      <wait_until_finished>Y</wait_until_finished>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
@@ -113,6 +116,7 @@
     </action>
     <action>
       <filename>/files/hop/pipelines/pipe_build_star_schema.hpl</filename>
+      <run_configuration>local</run_configuration>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -125,7 +129,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
-      <wait_until_finished>N</wait_until_finished>
+      <wait_until_finished>Y</wait_until_finished>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
@@ -140,6 +144,7 @@
     </action>
     <action>
       <filename>/files/hop/pipelines/pipe_build_final_consolidated.hpl</filename>
+      <run_configuration>local</run_configuration>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
@@ -152,7 +157,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
-      <wait_until_finished>N</wait_until_finished>
+      <wait_until_finished>Y</wait_until_finished>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
