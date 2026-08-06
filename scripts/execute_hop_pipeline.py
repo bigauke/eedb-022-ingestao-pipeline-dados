@@ -127,9 +127,12 @@ def ingest_reclamacoes(conn):
             print(f"Skipping empty file: {os.path.basename(fpath)}")
             continue
             
-        print(f"Processing: {os.path.basename(fpath)}")
-        df = pd.read_csv(fpath, sep=";", encoding="iso-8859-1", dtype=str)
+        try:
+            df = pd.read_csv(fpath, sep=";", encoding="utf-8", dtype=str)
+        except Exception:
+            df = pd.read_csv(fpath, sep=";", encoding="latin1", dtype=str)
         df = df.dropna(how="all")
+
         
         for _, row in df.iterrows():
             if pd.isna(row.get("Ano")) or str(row.get("Ano")).strip() == "":
