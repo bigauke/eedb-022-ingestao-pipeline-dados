@@ -1,28 +1,26 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <pipeline>
   <info>
-    <name>pipe_build_final_consolidated</name>
-    <description>Pipeline Hop para Carga da Tabela Final Consolidada</description>
-    <extended_description />
     <pipeline_version>1.0</pipeline_version>
+    <capture_transform_performance>N</capture_transform_performance>
+    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
+    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
     <pipeline_type>Normal</pipeline_type>
+    <pipeline_status>0</pipeline_status>
+    <parameters/>
+    <name>pipe_build_final_consolidated</name>
+    <name_sync_with_filename>N</name_sync_with_filename>
+    <description>Pipeline Hop para Carga da Tabela Final Consolidada</description>
+    <extended_description/>
+    <created_user>-</created_user>
+    <modified_user>-</modified_user>
+    <created_date>2026/08/06 00:03:35.754</created_date>
+    <modified_date>2026/08/06 00:03:35.754</modified_date>
   </info>
-  <order>
-    <hop>
-      <from>Execute SQL - Popula Tabela Final</from>
-      <to>Dummy End</to>
-      <enabled>Y</enabled>
-    </hop>
-  </order>
   <transform>
-    <name>Execute SQL - Popula Tabela Final</name>
     <type>ExecSQL</type>
-    <description>Popula a tabela dw.tb_final_consolidada_reclamacoes com os dados tratados e unidos</description>
+    <name>Execute SQL - Popula Tabela Final</name>
     <connection>postgres_dw_conn</connection>
-    <execute_each_row>N</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
-    <quote_string>N</quote_string>
     <sql>
 TRUNCATE TABLE dw.tb_final_consolidada_reclamacoes;
 
@@ -66,16 +64,53 @@ INNER JOIN dw.dim_instituicao i ON f.sk_instituicao = i.sk_instituicao
 INNER JOIN dw.dim_tempo t ON f.sk_tempo = t.sk_tempo
 LEFT JOIN dw.dim_clima_organizacional c ON f.sk_clima = c.sk_clima;
     </sql>
-    <insert_field />
-    <update_field />
-    <delete_field />
-    <read_field />
-    <arguments>
-    </arguments>
-  <GUI><xloc>150</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+    <execute_each_row>N</execute_each_row>
+    <update_field/>
+    <insert_field/>
+    <delete_field/>
+    <read_field/>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <set_params>N</set_params>
+    <arguments/>
+    <distribute>N</distribute>
+    <copies>1</copies>
+    <GUI>
+      <xloc>150</xloc>
+      <yloc>150</yloc>
+    </GUI>
+    <description>Popula a tabela dw.tb_final_consolidada_reclamacoes com os dados tratados e unidos</description>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+  </transform>
   <transform>
-    <name>Dummy End</name>
     <type>Dummy</type>
-    <description />
-  <GUI><xloc>450</xloc><yloc>150</yloc><draw>Y</draw></GUI></transform>
+    <name>Dummy End</name>
+    <distribute>N</distribute>
+    <copies>1</copies>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>144</yloc>
+    </GUI>
+    <description/>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+  </transform>
+  <order>
+    <hop>
+      <from>Execute SQL - Popula Tabela Final</from>
+      <to>Dummy End</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <notepads/>
+  <attributes/>
+  <transform_error_handling/>
 </pipeline>
