@@ -10,7 +10,7 @@
     <parameters/>
     <name>pipe_build_final_consolidated</name>
     <name_sync_with_filename>N</name_sync_with_filename>
-    <description>Pipeline Hop para Carga da Tabela Final Consolidada</description>
+    <description>Pipeline Hop para Carga e Leitura da Tabela Final Consolidada</description>
     <extended_description/>
     <created_user>-</created_user>
     <modified_user>-</modified_user>
@@ -37,19 +37,19 @@ SELECT
     t.ano,
     t.trimestre,
     t.rotulo_trimestre,
-    i.cnpj_if,
+    COALESCE(i.cnpj_if, 'N/A') AS cnpj_if,
     i.nome_instituicao,
-    i.segmento,
-    i.categoria,
-    i.tipo_instituicao,
-    f.indice_reclamacao,
-    f.qtd_reclamacoes_procedentes,
-    f.qtd_reclamacoes_outras,
-    f.qtd_reclamacoes_nao_reguladas,
-    f.qtd_total_reclamacoes,
-    f.qtd_total_clientes_ccs_scr,
-    f.qtd_clientes_ccs,
-    f.qtd_clientes_scr,
+    COALESCE(i.segmento, 'Outros') AS segmento,
+    COALESCE(i.categoria, 'N/A') AS categoria,
+    COALESCE(i.tipo_instituicao, 'N/A') AS tipo_instituicao,
+    COALESCE(f.indice_reclamacao, 0) AS indice_reclamacao,
+    COALESCE(f.qtd_reclamacoes_procedentes, 0) AS qtd_reclamacoes_procedentes,
+    COALESCE(f.qtd_reclamacoes_outras, 0) AS qtd_reclamacoes_outras,
+    COALESCE(f.qtd_reclamacoes_nao_reguladas, 0) AS qtd_reclamacoes_nao_reguladas,
+    COALESCE(f.qtd_total_reclamacoes, 0) AS qtd_total_reclamacoes,
+    COALESCE(f.qtd_total_clientes_ccs_scr, 0) AS qtd_total_clientes_ccs_scr,
+    COALESCE(f.qtd_clientes_ccs, 0) AS qtd_clientes_ccs,
+    COALESCE(f.qtd_clientes_scr, 0) AS qtd_clientes_scr,
     c.employer_name,
     c.score_geral AS score_geral_glassdoor,
     c.score_cultura AS score_cultura_glassdoor,
@@ -65,27 +65,33 @@ INNER JOIN dw.dim_tempo t ON f.sk_tempo = t.sk_tempo
 LEFT JOIN dw.dim_clima_organizacional c ON f.sk_clima = c.sk_clima;
     </sql>
     <execute_each_row>N</execute_each_row>
-    <update_field/>
-    <insert_field/>
-    <delete_field/>
-    <read_field/>
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
     <set_params>N</set_params>
-    <arguments/>
-    <distribute>N</distribute>
     <copies>1</copies>
     <GUI>
       <xloc>150</xloc>
       <yloc>150</yloc>
     </GUI>
     <description>Popula a tabela dw.tb_final_consolidada_reclamacoes com os dados tratados e unidos</description>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <attributes/>
+  </transform>
+  <transform>
+    <type>TableInput</type>
+    <name>Table input - Leitura Tabela Final</name>
+    <connection>postgres_dw_conn</connection>
+    <sql>SELECT * FROM dw.tb_final_consolidada_reclamacoes;</sql>
+    <limit>0</limit>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <copies>1</copies>
+    <GUI>
+      <xloc>350</xloc>
+      <yloc>150</yloc>
+    </GUI>
+    <description>Lê a tabela final consolidada para permitir visualização e preview dos dados gravados</description>
   </transform>
   <transform>
     <type>Dummy</type>
@@ -93,24 +99,23 @@ LEFT JOIN dw.dim_clima_organizacional c ON f.sk_clima = c.sk_clima;
     <distribute>N</distribute>
     <copies>1</copies>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>144</yloc>
+      <xloc>550</xloc>
+      <yloc>150</yloc>
     </GUI>
     <description/>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <attributes/>
   </transform>
   <order>
     <hop>
       <from>Execute SQL - Popula Tabela Final</from>
+      <to>Table input - Leitura Tabela Final</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input - Leitura Tabela Final</from>
       <to>Dummy End</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <notepads/>
   <attributes/>
-  <transform_error_handling/>
 </pipeline>
